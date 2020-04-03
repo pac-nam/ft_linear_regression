@@ -2,9 +2,11 @@
 
 import pandas
 import sys
+import csv
 
 def estimate_price(km, theta0, theta1):
-	return (km * theta1 + theta0)
+	linear_regression.predict(50000)
+	# return (km * theta1 + theta0)
 
 def training(file_name):
 	x, y, x_square, xy = 0, 0, 0, 0
@@ -30,7 +32,10 @@ def training(file_name):
 
 def save_theta(theta0, theta1):
 	# print("Theta0 =", theta0, "\nTheta1 =", theta1)
-	# print(estimate_price(240000, theta0, theta1))
+	with open(".save_model.csv", 'w', newline='') as csvfile:
+  	  spamwriter = csv.writer(csvfile, delimiter=',')
+  	  spamwriter.writerow(["Theta0", "Theta1"])
+  	  spamwriter.writerow([theta0, theta1])
 
 if __name__ == "__main__":
 	try :
