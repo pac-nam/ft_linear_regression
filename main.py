@@ -3,7 +3,6 @@
 import pandas as pd
 import sys
 import csv
-import sys
 import matplotlib.pyplot as plt
 
 def derivate_t1(data, t0, t1):
