@@ -16,4 +16,4 @@ if __name__ == "__main__":
         estimate_price = estimate_price(args.kilometers)
         print("Price estimate is : {}".format(round(estimate_price, 2)))
     except FileNotFoundError as error :
-        print("File not found. Please, run train_model.py")
+        print("Model not found. Please, run train_model.py")
