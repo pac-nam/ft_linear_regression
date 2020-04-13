@@ -1,10 +1,8 @@
-#!/usr/bin/python3
-
 import pandas as pd
 import sys
 import csv
 import matplotlib.pyplot as plt
-from random import *
+import argparse
 
 def estimate_price(km, theta0, theta1):
 	return (theta1*km + theta0)
@@ -38,7 +36,7 @@ def cost(t0, t1, df):
 def normalize_data(csv):
 	return((pd.DataFrame({"km": csv.km / csv.km.max(), "price": csv.price / csv.price.max()})), csv.price.max(), csv.km.max())
 
-def training(file_name):
+def training(file_name, max_iter, learning_rate):
 	data = pd.read_csv(file_name, delimiter=',')
 	cars_nb = len(data)
 	if len(data.columns) != 2:
@@ -46,8 +44,6 @@ def training(file_name):
 	if (cars_nb == 0):
 		return (0,0, "No car")
 	data, max_price, max_km = normalize_data(data)
-	max_iter = 1000
-	learning_rate = 0.1
 	t0 = 0
 	t1 = 0
 	cost_history = []
@@ -65,21 +61,31 @@ def save_theta(theta0, theta1):
   	  spamwriter.writerow(["Theta0", "Theta1"])
   	  spamwriter.writerow([theta0, theta1])
 
+def model_train(file, max_iter, learning_rate):
+	theta0, theta1, error = training(file, max_iter, learning_rate)
+	if error != "":
+		print(error)
+		return
+	save_theta(theta0, theta1)
+	theta = pd.read_csv(".save_model.csv", delimiter=',')
+	t0 = theta.Theta0[0]
+	t1 = theta.Theta1[0]
+	data = pd.read_csv("data.csv", delimiter=',')
+	plot_graph_model(t0, t1, data)
+
 if __name__ == "__main__":
 	try :
-		if len(sys.argv) != 2:
-			print("Usage:", sys.argv[0], "<file1>")
-			sys.exit(0)
-		theta0, theta1, error = training(sys.argv[1])
-		if error != "":
-			print(error)
-			sys.exit(0)
-		save_theta(theta0, theta1)
-		theta = pd.read_csv(".save_model.csv", delimiter=',')
-		t0 = theta.Theta0[0]
-		t1 = theta.Theta1[0]
-		data = pd.read_csv("data.csv", delimiter=',')
-		plot_graph_model(t0, t1, data)
+		max_iter, learning_rate = 1000, 0.1
+		parser = argparse.ArgumentParser()
+		parser.add_argument("file", help="define our file", type = str)
+		parser.add_argument("-m","--maxIter", help="define hyperparameter 'max_iter' (default = 1000)", type = int)
+		parser.add_argument("-l","--learningRate", help="define hyperparameter 'learning_rate' (default = 0.1)", type = float)
+		args = parser.parse_args()
+		if args.maxIter:
+			max_iter = args.maxIter
+		if (args.learningRate):
+			learning_rate = args.learningRate
+		model_train(args.file, max_iter, learning_rate)
 
 	except AttributeError as error:
 		print("Error system : {}".format(error))
