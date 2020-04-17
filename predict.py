@@ -1,5 +1,6 @@
 import csv
 import argparse
+import sys
 import pandas as pd
 
 def estimate_price(km):
@@ -13,7 +14,10 @@ if __name__ == "__main__":
         parser = argparse.ArgumentParser()
         parser.add_argument("kilometers", help="Define parameter 'kilometer' to prediction", type = int)
         args = parser.parse_args()
+        if (args.kilometers < 0):
+            print("Parameter must be positive")
+            sys.exit(0)
         estimate_price = estimate_price(args.kilometers)
-        print("Price estimate is : {}".format(round(estimate_price, 2)))
+        print("Estimate price is : {}".format(round(estimate_price, 2)))
     except FileNotFoundError as error :
         print("Model not found. Please, run train_model.py")

@@ -46,6 +46,10 @@ def training(args, max_iter, learning_rate):
 		return (0, 0, "invalid file")
 	if (cars_nb == 0):
 		return (0,0, "No car")
+	if (data.km.min() < 0):
+		return (0,0, "km value must be positive")
+	if (data.price.min() < 0):
+		return (0,0, "price value must be positive")
 	data, max_price, max_km = normalize_data(data)
 	t0 = 0
 	t1 = 0
