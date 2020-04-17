@@ -71,7 +71,7 @@ def model_train(args, max_iter, learning_rate):
 	theta = pd.read_csv(".save_model.csv", delimiter=',')
 	t0 = theta.Theta0[0]
 	t1 = theta.Theta1[0]
-	data = pd.read_csv("data.csv", delimiter=',')
+	data = pd.read_csv(args.file, delimiter=',')
 	if args.visualise:
 		plot_graph_model(t0, t1, data)
 
