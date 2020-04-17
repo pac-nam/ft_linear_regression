@@ -36,8 +36,8 @@ def cost(t0, t1, df):
 def normalize_data(csv):
 	return((pd.DataFrame({"km": csv.km / csv.km.max(), "price": csv.price / csv.price.max()})), csv.price.max(), csv.km.max())
 
-def training(file_name, max_iter, learning_rate):
-	data = pd.read_csv(file_name, delimiter=',')
+def training(args, max_iter, learning_rate):
+	data = pd.read_csv(args.file, delimiter=',')
 	cars_nb = len(data)
 	if len(data.columns) != 2:
 		return (0, 0, "invalid file")
@@ -52,7 +52,8 @@ def training(file_name, max_iter, learning_rate):
 		t0 = t0 - (learning_rate * tmpt0)
 		t1 = t1 - (learning_rate * tmpt1)
 		cost_history.append(cost(t0, t1, data))
-	plot_graph_cost(max_iter, cost_history)
+	if args.visualise:
+		plot_graph_cost(max_iter, cost_history)
 	return(t0*max_price, (t1 * max_price) / max_km, "")
 
 def save_theta(theta0, theta1):
@@ -61,8 +62,8 @@ def save_theta(theta0, theta1):
   	  spamwriter.writerow(["Theta0", "Theta1"])
   	  spamwriter.writerow([theta0, theta1])
 
-def model_train(file, max_iter, learning_rate):
-	theta0, theta1, error = training(file, max_iter, learning_rate)
+def model_train(args, max_iter, learning_rate):
+	theta0, theta1, error = training(args, max_iter, learning_rate)
 	if error != "":
 		print(error)
 		return
@@ -71,7 +72,8 @@ def model_train(file, max_iter, learning_rate):
 	t0 = theta.Theta0[0]
 	t1 = theta.Theta1[0]
 	data = pd.read_csv("data.csv", delimiter=',')
-	plot_graph_model(t0, t1, data)
+	if args.visualise:
+		plot_graph_model(t0, t1, data)
 
 if __name__ == "__main__":
 	try :
@@ -80,12 +82,13 @@ if __name__ == "__main__":
 		parser.add_argument("file", help="define our file", type = str)
 		parser.add_argument("-m","--maxIter", help="define hyperparameter 'max_iter' (default = 1000)", type = int)
 		parser.add_argument("-l","--learningRate", help="define hyperparameter 'learning_rate' (default = 0.1)", type = float)
+		parser.add_argument("-v","--visualise", help="define create files model.png and cost.png that represent the graph training result", action="store_true")
 		args = parser.parse_args()
 		if args.maxIter:
 			max_iter = args.maxIter
 		if (args.learningRate):
 			learning_rate = args.learningRate
-		model_train(args.file, max_iter, learning_rate)
+		model_train(args, max_iter, learning_rate)
 
 	except AttributeError as error:
 		print("Error system : {}".format(error))
