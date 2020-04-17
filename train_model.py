@@ -37,7 +37,10 @@ def normalize_data(csv):
 	return((pd.DataFrame({"km": csv.km / csv.km.max(), "price": csv.price / csv.price.max()})), csv.price.max(), csv.km.max())
 
 def training(args, max_iter, learning_rate):
-	data = pd.read_csv(args.file, delimiter=',')
+	try :
+		data = pd.read_csv(args.file, delimiter=',')
+	except FileNotFoundError as error :
+		return(0, 0, "Error system : {}".format(error))
 	cars_nb = len(data)
 	if len(data.columns) != 2:
 		return (0, 0, "invalid file")
