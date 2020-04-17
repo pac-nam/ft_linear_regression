@@ -4,6 +4,9 @@ import csv
 import matplotlib.pyplot as plt
 import argparse
 
+def isNaN(num):
+    return num != num
+
 def least_square(data):
 	t0, t1 = 0, 0
 	x, y, x_square, xy, cars_nb = 0, 0, 0, 0, len(data)
@@ -57,6 +60,9 @@ def normalize_data(csv):
 def training(args, max_iter, learning_rate):
 	try :
 		data = pd.read_csv(args.file, delimiter=',')
+		for car in data.itertuples():
+			if (isNaN(car.km) or isNaN(car.price)):
+				return(0, 0, "Invalid fle")
 	except FileNotFoundError as error :
 		return(0, 0, "Error system : {}".format(error))
 	cars_nb = len(data)
