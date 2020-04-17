@@ -4,6 +4,24 @@ import csv
 import matplotlib.pyplot as plt
 import argparse
 
+def least_square(data):
+	t0, t1 = 0, 0
+	x, y, x_square, xy, cars_nb = 0, 0, 0, 0, len(data)
+	for car in data.itertuples():
+		x += car.km
+		y += car.price
+		x_square += car.km ** 2
+		xy += car.km * car.price
+	x /= cars_nb
+	y /= cars_nb
+	xy /= cars_nb
+	x_square /= cars_nb
+
+	t1 = abs(xy) - (abs(x) * abs(y))
+	t1 /= abs(x_square) - (abs(x) ** 2)
+	t0 = abs(y) - t1 * abs(x)
+	return (t0, t1, "")
+
 def estimate_price(km, theta0, theta1):
 	return (theta1*km + theta0)
 
@@ -12,7 +30,7 @@ def gradient(data, t0, t1):
 	for car in data.itertuples():
 		sumt0 += (t0 + (t1 * car.km)) - car.price
 		sumt1 += ((t0 + (t1 * car.km)) - car.price) * car.km
-	return((1 / m) * sumt0, (1 / m) * sumt1)
+	return(sumt0 / m, sumt1 / m)
 
 def plot_graph_model(t0, t1, data):
 	fig = plt.figure()
@@ -50,6 +68,8 @@ def training(args, max_iter, learning_rate):
 		return (0,0, "km value must be positive")
 	if (data.price.min() < 0):
 		return (0,0, "price value must be positive")
+	if (args.square):
+		return least_square(data)
 	data, max_price, max_km = normalize_data(data)
 	t0 = 0
 	t1 = 0
@@ -90,6 +110,7 @@ if __name__ == "__main__":
 		parser.add_argument("-m","--maxIter", help="define hyperparameter 'max_iter' (default = 1000)", type = int)
 		parser.add_argument("-l","--learningRate", help="define hyperparameter 'learning_rate' (default = 0.1)", type = float)
 		parser.add_argument("-v","--visualise", help="define create files model.png and cost.png that represent the graph training result", action="store_true")
+		parser.add_argument("-s","--square", help="use the least square method to calculate prediction parameters", action="store_true")
 		args = parser.parse_args()
 		if args.maxIter:
 			max_iter = args.maxIter
