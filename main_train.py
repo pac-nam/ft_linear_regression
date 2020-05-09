@@ -4,7 +4,9 @@ import csv
 import pandas as pd
 from plot import *
 from training import training
+import warnings
 
+warnings.simplefilter("ignore")
 def save_theta(theta0, theta1):
 	with open(".save_model.csv", 'w', newline='') as csvfile:
   	  spamwriter = csv.writer(csvfile, delimiter=',')

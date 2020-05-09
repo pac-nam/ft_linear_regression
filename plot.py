@@ -14,5 +14,4 @@ def plot_graph_model(t0, t1, data):
 
 def plot_graph_cost(max_iter, cost_history):
 	plt.plot(range(max_iter), cost_history)
-	plt.show()
 	plt.savefig("cost.png")
