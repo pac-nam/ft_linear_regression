@@ -9,8 +9,10 @@ def plot_graph_model(t0, t1, data):
 	plt.plot(data.km, estimate_price(data.km, t0, t1), c='r')
 	plt.xlabel('km')
 	plt.ylabel('price')
+	plt.show()
 	plt.savefig("model.png")
 
 def plot_graph_cost(max_iter, cost_history):
 	plt.plot(range(max_iter), cost_history)
+	plt.show()
 	plt.savefig("cost.png")

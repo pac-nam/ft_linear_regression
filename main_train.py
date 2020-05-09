@@ -41,5 +41,5 @@ if __name__ == "__main__":
 		model_train(args, max_iter, learning_rate)
 		print("training complete")
 
-	except AttributeError as error:
+	except (AttributeError, OverflowError) as error:
 		print("Error system : {}".format(error))

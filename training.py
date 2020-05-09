@@ -1,6 +1,6 @@
 import pandas as pd
 import csv
-from plot import plot_graph_cost 
+from plot import plot_graph_cost
 
 def isNaN(num):
     return num != num
